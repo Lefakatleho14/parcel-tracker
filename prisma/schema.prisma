@@ -1,0 +1,62 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// ── ENUMS ──────────────────────────────────────────────────────────────────────
+
+enum ParcelStatus {
+  PENDING
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  EXCEPTION
+  RETURNED
+}
+
+// ── MODELS ─────────────────────────────────────────────────────────────────────
+
+model Parcel {
+  // Primary key — human-readable tracking number (e.g. PKT-20240618-A3X9)
+  // We use a string PK instead of an auto-increment integer because users
+  // will type this number — it needs to be meaningful, not just "42"
+  tracking_number String   @id @db.VarChar(20)
+
+  sender_name     String   @db.VarChar(100)
+  receiver_name   String   @db.VarChar(100)
+  status          ParcelStatus @default(PENDING)
+  created_at      DateTime @default(now())
+
+  // Relation: one parcel has many tracking events
+  events          TrackingEvent[]
+
+  @@map("parcels")   // Maps to "parcels" table (not "Parcel")
+}
+
+model TrackingEvent {
+  // UUID primary key — events don't need human-readable IDs
+  event_id        String   @id @default(uuid())
+
+  // Foreign key back to the parcel
+  tracking_number String   @db.VarChar(20)
+  parcel          Parcel   @relation(fields: [tracking_number], references: [tracking_number], onDelete: Cascade)
+
+  status          ParcelStatus
+  location        String   @db.VarChar(200)
+  timestamp       DateTime @default(now())
+
+  // Index on tracking_number — speeds up "get all events for parcel" queries
+  @@index([tracking_number])
+
+  // Order events by newest first by default
+  @@index([tracking_number, timestamp(sort: Desc)])
+
+  @@map("tracking_events")
+}
