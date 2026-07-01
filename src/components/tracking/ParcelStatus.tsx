@@ -4,7 +4,6 @@
  */
 
 import { ParcelWithEvents } from '@/types'
-import { Badge }            from '@/components/ui/Badge'
 import { STATUS_CONFIG }    from '@/lib/constants'
 import { formatDate }       from '@/lib/utils'
 
