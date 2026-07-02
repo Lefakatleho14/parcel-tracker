@@ -13,7 +13,7 @@ import { ParcelStatus, ParcelWithEvents } from '@/types'
 import { VALID_STATUS_TRANSITIONS }      from '@/lib/constants'
 
 interface UpdateStatusFormProps {
-  onStatusUpdated: (tracking_number: string) => void
+  onStatusUpdated: () => void
 }
 
 export function UpdateStatusForm({ onStatusUpdated }: UpdateStatusFormProps) {
@@ -26,7 +26,6 @@ export function UpdateStatusForm({ onStatusUpdated }: UpdateStatusFormProps) {
   const [error,          setError]          = useState<string | null>(null)
   const [success,        setSuccess]        = useState<string | null>(null)
 
-  // Step 1 — look up the parcel to get its current status
   async function handleLookup(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
@@ -53,7 +52,6 @@ export function UpdateStatusForm({ onStatusUpdated }: UpdateStatusFormProps) {
     }
   }
 
-  // Step 2 — update the status
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault()
     if (!newStatus) return
@@ -82,7 +80,7 @@ export function UpdateStatusForm({ onStatusUpdated }: UpdateStatusFormProps) {
       setCurrentStatus(newStatus as ParcelStatus)
       setNewStatus('')
       setLocation('')
-      onStatusUpdated(trackingNumber)
+      onStatusUpdated()
 
     } catch {
       setError('Network error — please try again')
@@ -99,7 +97,6 @@ export function UpdateStatusForm({ onStatusUpdated }: UpdateStatusFormProps) {
     <Card title="Update Parcel Status">
       <div className="flex flex-col gap-4">
 
-        {/* Step 1: Look up parcel */}
         <form onSubmit={handleLookup} className="flex gap-2">
           <div className="flex-1">
             <Input
@@ -117,7 +114,6 @@ export function UpdateStatusForm({ onStatusUpdated }: UpdateStatusFormProps) {
           </div>
         </form>
 
-        {/* Step 2: Update status (shown after lookup) */}
         {currentStatus && (
           <form onSubmit={handleUpdate} className="flex flex-col gap-4 pt-2 border-t border-gray-100">
             <p className="text-sm text-gray-600">

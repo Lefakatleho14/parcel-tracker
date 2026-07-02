@@ -53,13 +53,13 @@ export default function AdminPage() {
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
 
-  function handleParcelCreated(_parcel: ParcelWithEvents) {
-    fetchParcels(statusFilter)
-  }
+  function handleParcelCreated() {
+  fetchParcels(statusFilter)
+}
 
-  function handleStatusUpdated(_tracking_number: string) {
-    fetchParcels(statusFilter)
-  }
+function handleStatusUpdated() {
+  fetchParcels(statusFilter)
+}
 
   function handleFilterChange(status: ParcelStatus | 'ALL') {
     setStatusFilter(status)
