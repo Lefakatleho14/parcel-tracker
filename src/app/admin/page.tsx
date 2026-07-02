@@ -14,7 +14,7 @@ import { UpdateStatusForm }   from '@/components/admin/UpdateStatusForm'
 import { ParcelTable }        from '@/components/admin/ParcelTable'
 import { StatusFilter }       from '@/components/admin/StatusFilter'
 import { Card }               from '@/components/ui/Card'
-import { Parcel, ParcelStatus, ParcelWithEvents } from '@/types'
+import { Parcel, ParcelStatus } from '@/types'
 
 export default function AdminPage() {
   const [parcels,       setParcels]       = useState<Parcel[]>([])
